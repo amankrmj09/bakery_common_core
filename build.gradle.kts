@@ -35,6 +35,9 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     
+    // 9. Caching
+    api("org.springframework.boot:spring-boot-starter-cache")
+    api("com.github.ben-manes.caffeine:caffeine")
 }
 
 tasks.test {
