@@ -52,7 +52,7 @@ publishing {
             pom {
                 name.set("Bakery Common Core")
                 description.set("Shared DTOs and Common Utilities for Bakery Microservices")
-                url.set("https://github.com/amankrmj09/bakery-common-core")
+                url.set("https://github.com/amankrmj09/bakery_common_core")
                 licenses {
                     license {
                         name.set("The MIT License")
@@ -70,7 +70,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/amankrmj09/bakery-common-core")
+            url = uri("https://maven.pkg.github.com/amankrmj09/bakery_common_core")
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
