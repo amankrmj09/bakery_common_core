@@ -1,41 +1,79 @@
-# 🧁 Bakery Common Core
+# Bakery Common Core
 
-![Java](https://img.shields.io/badge/Java-21%2B-orange.svg)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen.svg)
+Welcome to the **Bakery Common Core** module! This project serves as the foundational shared library for all microservices in the Blu's Bakery ecosystem. 
 
-Welcome to **Bakery Common Core**, the foundational utility package of the Shah's Bakery Microservice Platform.
+> [!IMPORTANT]  
+> This is a shared library module, **not** a standalone microservice. It is designed to be imported as a dependency by other microservices to promote code reuse, consistency, and standard practices across the platform.
 
 ## 🎯 Purpose
-The Common Core repository provides shared Data Transfer Objects (DTOs), standard exceptions, and generic utilities used across all bakery microservices. By moving standard `api` dependencies here, it ensures that all business microservices inherit the exact same versions of the Spring Boot Web and Validation starters.
 
-## 🛠️ Features
-- **Centralized DTOs**: Consistent data models for inter-service REST communication.
-- **Global Error Handling**: Standardized exception structures like `ServiceUnavailableException`.
-- **Standardized Logging**: Pre-configured SLF4J/Logback configurations (`logback-base.xml`).
-- **Dependency DRYing**: Exposes core Spring Boot Web starters to reduce boilerplate in leaf microservices.
+The primary goal of this module is to centralize shared logic and common patterns that are used across multiple microservices. This prevents code duplication and ensures a unified architecture. It includes:
 
-## 📁 Folder Structure
+*   **Shared Utilities:** Common helper functions for formatting, validation, string manipulation, date-time processing, etc.
+*   **Base Classes:** Abstract classes and interfaces (e.g., base entity classes, repository interfaces) that provide standard boilerplate for domain models.
+*   **Generic DTOs (Data Transfer Objects):** Standardized request and response payloads, such as paginated responses or common metadata wrappers.
+*   **Custom Exception Classes:** Domain-specific exceptions (e.g., `ResourceNotFoundException`, `ValidationException`, `UnauthorizedAccessException`) to maintain consistent error states.
+*   **Global Error Handling Constants:** Standardized error codes and messages to ensure API clients receive consistent error structures.
+
+## 📂 Folder Structure
+
+The project follows standard Java/Kotlin source structuring conventions.
+
 ```text
-src/
-└── main/
-    ├── java/org/blubakery/common/core/
-    │   ├── dto/        # Shared Data Transfer Objects for consistent inter-service communication.
-    │   └── exception/  # Standardized error structures and Base Exception Handlers.
-    └── resources/
-        └── logback-base.xml # Standard JSON/Console logging layout.
+bakery_common_core/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── blusbakery/
+│   │   │           └── common/
+│   │   │               ├── config/       # Shared configuration (e.g., Jackson, Security baselines)
+│   │   │               ├── dto/          # Generic Data Transfer Objects
+│   │   │               ├── exception/    # Custom domain exceptions
+│   │   │               ├── handler/      # Global Exception handlers / Advice
+│   │   │               └── util/         # Shared utility classes
+│   │   └── resources/                    # Shared properties, messages
+│   └── test/                             # Unit tests for shared logic
+├── build.gradle.kts                      # Gradle build configuration
+└── README.md                             # This file
 ```
 
-## 🚀 Getting Started
+## 🚀 How to Include in Other Microservices
 
-### Local Setup
-1. Include this library in your service's `build.gradle.kts`:
-   ```kotlin
-   implementation("org.blubakery.libs:bakery_common_core:1.0.0")
-   ```
-2. For logging, add to your microservice's `logback-spring.xml`:
-   ```xml
-   <include resource="logback-base.xml"/>
-   ```
+Other microservices within the bakery ecosystem can include this library as a dependency. Depending on your project setup, it can be included as a composite build dependency (if part of a multi-module project) or as a published artifact.
 
-## 🔗 Related Links
-- [Main Platform README](../README.md)
+To include it in a standard Gradle microservice using Kotlin DSL (`build.gradle.kts`):
+
+```kotlin
+dependencies {
+    // If published to a local or remote Maven repository:
+    implementation("com.blusbakery:bakery_common_core:1.0.0-SNAPSHOT")
+    
+    // OR if configured as a multi-module project dependency:
+    // implementation(project(":bakery_common_core"))
+}
+```
+
+## 🛠️ Building and Publishing Locally
+
+If you make changes to this core module and need to test them in another microservice running locally, you must build and publish the changes to your local Maven repository (`~/.m2`).
+
+To build and publish locally, navigate to the root of this module (or the root project depending on the setup) and run:
+
+```bash
+# Unix/macOS
+./gradlew publishToMavenLocal
+
+# Windows
+gradlew.bat publishToMavenLocal
+```
+
+Once published, other microservices that include `mavenLocal()` in their `repositories` block will automatically pick up your latest local build.
+
+```kotlin
+// In the consumer microservice's build.gradle.kts
+repositories {
+    mavenLocal() // Ensure this is present
+    mavenCentral()
+}
+```
