@@ -1,59 +1,53 @@
 package org.blubakery.common.core.exception.handler;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
+/**
+ * Standard error response payload returned by all bakery services.
+ *
+ * <p>Contains both:
+ * <ul>
+ *   <li>{@link #validationErrors} — flat field→message map (backward compatible)</li>
+ *   <li>{@link #fieldErrors} — structured per-field list with rejected values (new)</li>
+ * </ul>
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ErrorResponse {
+
+    /** Short error code, e.g. "VALIDATION_ERROR", "RESOURCE_NOT_FOUND". */
     private String code;
+
+    /** Human-readable error message. */
     private String message;
+
+    /** UTC timestamp of when the error occurred. */
     private LocalDateTime timestamp;
+
+    /** Request URI path that triggered the error. */
     private String path;
+
+    /**
+     * Flat field → message map for validation errors.
+     * Kept for backward compatibility with existing clients.
+     */
     private Map<String, String> validationErrors;
+
+    /**
+     * Structured per-field validation errors including the rejected value.
+     * Populated in addition to {@link #validationErrors} for richer client responses.
+     */
+    private List<ValidationErrorDetail> fieldErrors;
+
+    /** Optional extra details (e.g. productId, requestedQuantity for stock errors). */
     private Map<String, Object> details;
-
-    public ErrorResponse() {
-    }
-
-    public ErrorResponse(String code, String message, LocalDateTime timestamp, String path) {
-        this.code = code;
-        this.message = message;
-        this.timestamp = timestamp;
-        this.path = path;
-    }
-
-    public ErrorResponse(String code, String message, LocalDateTime timestamp, String path, Map<String, String> validationErrors) {
-        this.code = code;
-        this.message = message;
-        this.timestamp = timestamp;
-        this.path = path;
-        this.validationErrors = validationErrors;
-    }
-
-    public ErrorResponse(String code, String message, LocalDateTime timestamp, String path, Map<String, String> validationErrors, Map<String, Object> details) {
-        this.code = code;
-        this.message = message;
-        this.timestamp = timestamp;
-        this.path = path;
-        this.validationErrors = validationErrors;
-        this.details = details;
-    }
-
-    // Getters and Setters
-    public String getCode() { return code; }
-    public void setCode(String code) { this.code = code; }
-
-    public String getMessage() { return message; }
-    public void setMessage(String message) { this.message = message; }
-
-    public LocalDateTime getTimestamp() { return timestamp; }
-    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
-
-    public String getPath() { return path; }
-    public void setPath(String path) { this.path = path; }
-
-    public Map<String, String> getValidationErrors() { return validationErrors; }
-    public void setValidationErrors(Map<String, String> validationErrors) { this.validationErrors = validationErrors; }
-
-    public Map<String, Object> getDetails() { return details; }
-    public void setDetails(Map<String, Object> details) { this.details = details; }
 }
