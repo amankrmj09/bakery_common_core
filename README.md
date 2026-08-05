@@ -17,25 +17,43 @@ The primary goal of this module is to centralize shared logic and common pattern
 
 ## 📂 Folder Structure
 
-The project follows standard Java/Kotlin source structuring conventions.
+The project follows standard Java source structuring conventions.
 
 ```text
 bakery_common_core/
+├── gradle/
+│   └── wrapper/
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
 ├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── com/
-│   │   │       └── blusbakery/
-│   │   │           └── common/
-│   │   │               ├── config/       # Shared configuration (e.g., Jackson, Security baselines)
-│   │   │               ├── dto/          # Generic Data Transfer Objects
-│   │   │               ├── exception/    # Custom domain exceptions
-│   │   │               ├── handler/      # Global Exception handlers / Advice
-│   │   │               └── util/         # Shared utility classes
-│   │   └── resources/                    # Shared properties, messages
-│   └── test/                             # Unit tests for shared logic
-├── build.gradle.kts                      # Gradle build configuration
-└── README.md                             # This file
+│   └── main/
+│       ├── java/
+│       │   └── org/
+│       │       └── blubakery/
+│       │           └── common/
+│       │               └── core/
+│       │                   ├── constants/
+│       │                   │   ├── GlobalAppConstants.java
+│       │                   │   ├── HttpHeaderConstants.java
+│       │                   │   └── RoleConstants.java
+│       │                   └── exception/
+│       │                       ├── common/
+│       │                       │   ├── DuplicateResourceException.java
+│       │                       │   ├── ResourceNotFoundException.java
+│       │                       │   └── ServiceUnavailableException.java
+│       │                       └── handler/
+│       │                           ├── BaseExceptionHandler.java
+│       │                           ├── ErrorResponse.java
+│       │                           └── ValidationErrorDetail.java
+│       └── resources/
+│           └── logback-base.xml
+├── build.gradle.kts
+├── gradle.properties
+├── gradlew
+├── gradlew.bat
+├── settings.gradle.kts
+├── API_REFERENCE.md
+└── README.md
 ```
 
 ## 🚀 How to Include in Other Microservices
@@ -46,8 +64,8 @@ To include it in a standard Gradle microservice using Kotlin DSL (`build.gradle.
 
 ```kotlin
 dependencies {
-    // If published to a local or remote Maven repository:
-    implementation("com.blusbakery:bakery_common_core:1.0.0-SNAPSHOT")
+    // If published to Maven Local or GitHub Packages:
+    implementation("org.blubakery:bakery_common_core:1.0.0-SNAPSHOT")
     
     // OR if configured as a multi-module project dependency:
     // implementation(project(":bakery_common_core"))
@@ -58,7 +76,7 @@ dependencies {
 
 If you make changes to this core module and need to test them in another microservice running locally, you must build and publish the changes to your local Maven repository (`~/.m2`).
 
-To build and publish locally, navigate to the root of this module (or the root project depending on the setup) and run:
+To build and publish locally, navigate to the root of this module and run:
 
 ```bash
 # Unix/macOS
@@ -77,3 +95,7 @@ repositories {
     mavenCentral()
 }
 ```
+
+## 🔗 Related Links
+
+- [Parent Repository](https://github.com/amankrmj09/Blu_s_Bakery)
