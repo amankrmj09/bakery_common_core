@@ -27,6 +27,10 @@ public class RestPageResponse<T> extends PageImpl<T> {
         super(content == null ? new ArrayList<>() : content, PageRequest.of(number, size == 0 ? 1 : size), totalElements == null ? 0 : totalElements);
     }
 
+    public RestPageResponse(org.springframework.data.domain.Page<T> page) {
+        super(page.getContent(), page.getPageable(), page.getTotalElements());
+    }
+
     public RestPageResponse(List<T> content, Pageable pageable, long total) {
         super(content, pageable, total);
     }
