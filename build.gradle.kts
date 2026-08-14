@@ -30,6 +30,7 @@ dependencies {
     // 2. Spring Boot Core & Web
     api("org.springframework.boot:spring-boot-starter-web")
     api("org.springframework.boot:spring-boot-starter-validation")
+    api("org.springframework.data:spring-data-commons")
     
     // 8. Tooling & Lombok
     compileOnly("org.projectlombok:lombok")
